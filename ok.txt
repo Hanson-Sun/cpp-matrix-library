@@ -1,0 +1,9 @@
+-g compilation flag
+naive optimized: 2820000, 2720000, 3000000, 2270000, 2560000
+simple threaded (no thread pool, 3.5x improvement): 775592, 765238, 756230, 737935
+simple threaded may be worse if i have lots of function calls, then overhead increases.
+thread pool (~4x improvement): 694515, 686907
+
+testing is pretty inconsistent, might do further optimizations in the future.
+
+old: 102728077 :skull: i aint even gonna run this more than once
