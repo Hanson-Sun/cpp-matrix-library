@@ -465,7 +465,7 @@ namespace Math
          * @param fn
          * @return Matrix
          */
-        Matrix applyFn(double (*fn)(double)) const
+        Matrix applyFn(std::function<double(double)> fn) const
         {
             std::vector<double> v(size);
             for (int i = 0; i < size; i++)
@@ -480,7 +480,7 @@ namespace Math
          * @param fn
          * @return Matrix
          */
-        void applyFnHere(double (*fn)(double))
+        void applyFnHere(std::function<double(double)> fn)
         {
             for (int i = 0; i < size; i++)
                 vals[i] = fn(vals[i]);
