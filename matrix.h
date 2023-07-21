@@ -864,6 +864,31 @@ namespace Math
         }
 
         /**
+         * @brief type cast override
+         * 
+         * @return vector<double> 
+         */
+        operator std::vector<double>() const { return vals; }
+
+        /**
+         * @brief type cast override
+         * 
+         * @return std::vector<double> 
+         */
+        operator std::vector<std::vector<double>>() const 
+        {
+            std::vector<std::vector<double>> vv(rows, std::vector<double>(cols));
+            int count = 0;
+            for (int i = 0; i < size; i++)
+            {
+                vv[count][i%cols] = vals[i];
+                if ((i + 1) % cols == 0)
+                    count++;
+            }
+            return vv; 
+        }
+
+        /**
          * @deprecated
          * @brief for testing
          * 

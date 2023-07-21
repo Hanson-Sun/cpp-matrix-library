@@ -25,6 +25,17 @@ int main()
 #endif
 
 #if true
+    std::cout << "please..." << std::endl;
+    auto bruh = (std::vector<std::vector<double>>) m7;
+    for (auto b : bruh)
+    {
+        for (auto s : b)
+        {
+            std::cout << s << " ";
+        }
+        std::cout << std::endl;
+    }
+    
     m7.transpose().print();
     m7.transposed();
     m7.print();
