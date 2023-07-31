@@ -51,6 +51,16 @@ namespace Math
             return threads.size();
         }
 
+        /**
+         * @brief Get the number of tasks in queue
+         * 
+         * @return int 
+         */
+        int getQueueSize() const
+        {
+            return tasks.size();
+        }
+
         // im gonna be real honest, i barely know how this works
         /**
          * @brief adds a task to the queue for processes by the threads
@@ -66,7 +76,7 @@ namespace Math
             auto wrapper = std::make_shared<std::packaged_task<decltype(task())()>>(std::move(task));
             {
                 std::unique_lock<std::mutex> lock{eventMutex};
-                tasks.emplace([=]
+                tasks.emplace([=, this]
                               { (*wrapper)(); });
             }
 
@@ -97,7 +107,7 @@ namespace Math
         {
             for (int i = 0; i < numThreads; i++)
             {
-                threads.emplace_back([=]
+                threads.emplace_back([=, this]
                                      {
                 while (true)
                 {
@@ -107,7 +117,7 @@ namespace Math
                         std::unique_lock<std::mutex> lock{eventMutex};
 
                         // blocks current thread from executing unless stopping or non-empty tasks
-                        event.wait(lock, [=] { return stopping || !tasks.empty();});
+                        event.wait(lock, [&] { return stopping || !tasks.empty();});
 
                         // only stop if tasks are completed and notified to stop
                         if (stopping && tasks.empty())
@@ -119,7 +129,15 @@ namespace Math
                     }
 
                     //performs the first task, this is out of scope because it should not be locked by the mutex during execution
-                    task();
+                    try
+                    {
+                        task();
+                    }
+                    catch(const std::exception& e)
+                    {
+                        std::cerr << "ok so my tasks suck " << e.what() << '\n';
+                        throw std::runtime_error("wow this sucks");
+                    }
 
                 } });
             }
@@ -680,7 +698,7 @@ namespace Math
             int m2Cols = m2.getCols();
             int m2Rows = m2.getRows();
 
-            if (m1.getRows() != m2.getRows())
+            if (m1Rows != m2Rows)
                 throw std::invalid_argument("Dimension mismatch.");
 
             std::vector<double> v(m1Cols * m2Cols);
@@ -695,7 +713,7 @@ namespace Math
                               for (int i = start; i < end; i++)
                                   for (int j = 0; j < m2Cols; j++)
                                       for (int k = 0; k < m1Rows; k++)
-                                          v[i * m2Cols + j] += m1[i * m1Cols + k] * m2[k * m2Cols + j]; },
+                                          v[i * m2Cols + j] += m1[k * m1Cols + i] * m2[k * m2Cols + j]; },
                               m1Cols);
 
             return Matrix(m1Cols, m2Cols, v);
@@ -715,7 +733,7 @@ namespace Math
             int m2Cols = m2.getCols();
             int m2Rows = m2.getRows();
 
-            if (m1.getCols() != m2.getCols())
+            if (m1Cols != m2Cols)
                 throw std::invalid_argument("Dimension mismatch.");
 
             std::vector<double> v(m1Rows * m2Rows);

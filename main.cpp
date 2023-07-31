@@ -24,7 +24,7 @@ int main()
     m6.print();
 #endif
 
-#if true
+#if false
     std::cout << "please..." << std::endl;
     auto bruh = (std::vector<std::vector<double>>) m7;
     for (auto b : bruh)
@@ -35,7 +35,7 @@ int main()
         }
         std::cout << std::endl;
     }
-    
+
     m7.transpose().print();
     m7.transposed();
     m7.print();
@@ -43,30 +43,31 @@ int main()
     m7.print();
 #endif
 
-#if true
+#if false
     (Math::Matrix({{1, 2}, {4, 5}}) * Math::Matrix({{1, 3}, {4, 6}})).print();
     (Math::Matrix({{1, 2}, {4, 5}, {7, 8}}) * Math::Matrix({{1, 2, 3}, {4, 5, 6}})).print();
     (Math::Matrix(std::vector<std::vector<double>>{{1}, {4}, {7}}) * Math::Matrix(std::vector<std::vector<double>>{{1, 2, 3}})).print();
     (Math::Matrix(std::vector<std::vector<double>>{{1, 2, 3}}) * Math::Matrix(std::vector<std::vector<double>>{{1}, {4}, {7}})).print();
 #endif
 
-#if true
+#if false
     Math::Matrix::iProd(Math::Matrix({{1, 3}, {4, 6}}), Math::Matrix({{1, 2}, {4, 5}})).print();
-    Math::Matrix::iProd(Math::Matrix({{1, 2}, {4, 5}, {7, 8}}), Math::Matrix({{1, 2}, {4, 5}, {7, 8}})).print();
-    Math::Matrix::iProd(Math::Matrix({{1, 2, 3}, {4, 5, 6}}), Math::Matrix({{1, 2, 3 , 4}, {4, 5, 6, 7}})).print();
-    Math::Matrix::iProd(Math::Matrix(std::vector<std::vector<double>>{{1, 2, 3}}),Math::Matrix(std::vector<std::vector<double>>{{1, 2, 3}})).print();
-    Math::Matrix::iProd(Math::Matrix(std::vector<std::vector<double>>{{1}, {4}, {7}}),Math::Matrix(std::vector<std::vector<double>>{{1}, {4}, {7}})).print();
+    Math::Matrix::iProd(Math::Matrix({{1, 2}, {4, 5}, {7, 8}}), Math::Matrix({{9, 10}, {11, 12}, {13, 14}})).print();
+    Math::Matrix::iProd(Math::Matrix({{1, 2}, {4, 5}, {7, 8}}), Math::Matrix(std::vector<std::vector<double>>{{9}, {11}, {13}})).print();
+    Math::Matrix::iProd(Math::Matrix({{1, 2, 3}, {4, 5, 6}}), Math::Matrix({{7, 8, 9 , 10}, {11, 12, 13, 14}})).print();
+    Math::Matrix::iProd(Math::Matrix(std::vector<std::vector<double>>{{1, 2, 3}}),Math::Matrix(std::vector<std::vector<double>>{{4, 5, 6}})).print();
+    Math::Matrix::iProd(Math::Matrix(std::vector<std::vector<double>>{{1}, {4}, {7}}),Math::Matrix(std::vector<std::vector<double>>{{8}, {10}, {11}})).print();
 #endif
 
-#if true
+#if false
     Math::Matrix::oProd( Math::Matrix({{1, 2}, {4, 5}}), Math::Matrix({{1, 3}, {4, 6}})).print();
-    Math::Matrix::oProd(Math::Matrix({{1, 2}, {4, 5}, {7, 8}}), Math::Matrix({{1, 4}, {4, 4}, {1, 8}})).print();
-    Math::Matrix::oProd(Math::Matrix({{1, 2, 3}, {4, 5, 6}}), Math::Matrix({{1, 2, 3}, {4, 5, 6}, {4, 5, 6}})).print();
+    Math::Matrix::oProd(Math::Matrix({{1, 2}, {4, 5}, {7, 8}}), Math::Matrix({{9, 10}, {11, 12}, {13, 14}})).print();
+    Math::Matrix::oProd(Math::Matrix({{1, 2, 3}, {4, 5, 6}}), Math::Matrix({{7, 8, 9}, {10, 11, 12}, {13, 14, 15}})).print();
     Math::Matrix::oProd(Math::Matrix(std::vector<std::vector<double>>{{1, 2, 3}}), Math::Matrix(std::vector<std::vector<double>>{{1, 2, 3}})).print();
     Math::Matrix::oProd(Math::Matrix(std::vector<std::vector<double>>{{1}, {4}, {7}}),Math::Matrix(std::vector<std::vector<double>>{{1}, {4}, {7}})).print();
 #endif
 
-#if true
+#if false
     Math::Matrix M1({{1, 2, 3}, {4, 5, 6}});
     Math::Matrix M2({{1, 2, 3}, {3, 4, 5}});
 
@@ -76,23 +77,29 @@ int main()
 #endif
 
 #if true
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 50000; i++)
     {
         Math::Matrix M1({{1, 2}, {4, 5}, {7, 8}});
         Math::Matrix M2({{1, 2, 3}, {4, 5, 6}});
 
-        Math::Matrix M3(512, 512, 2);
-        Math::Matrix M4(512, 1, 2);
+        Math::Matrix M3(128, 128, 2);
+        Math::Matrix M4(128, 1, 2);
+
+        Math::Matrix M(1000, 1);
 
         int n = 10;
 
-        std::cout << "begin multiplication" << std::endl;
+        std::cout << "begin multiplication " << i << std::endl;
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < n; i++)
         {
-            M1 *M2;
-            M3 *M3;
-            M3 *M4;
+            M1 * M2;
+            M3 * M3;
+            M3 * M4;
+            Math::Matrix::oProd(M, M);
+            Math::Matrix::oProd(M3, M3);
+            Math::Matrix::iProd(M3, M3);
+            Math::Matrix::hProd(M3, M3);
         }
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);

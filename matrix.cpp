@@ -314,7 +314,7 @@ namespace Math
                               for (int i = start; i < end; i++)
                                   for (int j = 0; j < m2Cols; j++)
                                       for (int k = 0; k < m1Rows; k++)
-                                          v[i * m2Cols + j] += m1[i * m1Cols + k] * m2[k * m2Cols + j]; },
+                                          v[i * m2Cols + j] += m1[k * m1Cols + i] * m2[k * m2Cols + j]; },
                           m1Cols);
 
         return Matrix(m1Cols, m2Cols, v);
